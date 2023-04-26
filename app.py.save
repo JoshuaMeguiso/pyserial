@@ -1,0 +1,26 @@
+import serial
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+ser = serial.Serial('/dev/ttyAMA0', 9600) # Adjust the serial port as needed
+
+class Credits(BaseModel):
+    value: int
+
+@app.get("/credits")
+async def get_credits():
+    received_string = ""
+    if ser.in_waiting > 0:
+        incoming_char = ser.read().decode('utf-8')
+        print(hex(ord(incoming_char)))
+        if hex(ord(incoming_char)) == 
+0xd':
+            credit_value = int(received_string.strip())
+            print(credit_value)
+            return Credits(value=credit_value)
+        else:
+            received_string += incoming_char
+    else:
+        return Credits(value=0)
